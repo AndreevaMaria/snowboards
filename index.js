@@ -1,9 +1,11 @@
-import { writeFileSync } from "fs";
-import snowboards from './snowboards';
+const fs = require("fs");
 
+//import { writeFileSync } from "fs";
+
+let snowboards = require('./snowboards')
 
 function send(result) {
-    writeFileSync('result.json', JSON.stringify(result, 2, 2))
+    fs.writeFileSync('./result.json', JSON.stringify(result, 2, 2))
 }
 
 snowboards(false, send);
