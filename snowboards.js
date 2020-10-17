@@ -14,6 +14,14 @@ async function getItem(url) {
         console.log('Не смог распарсить')
     }
 
+    let season
+        try {
+            season = document.querySelector("#variantName").innerHTML.replace('Snowboard', '').trim().split(' ').pop().trim()
+        } catch (error) {
+            console.log('Не смог распарсить')
+        }
+
+
     let brand 
     try {
         brand = document.querySelector(".c-details-box__name span").innerHTML
@@ -26,7 +34,7 @@ async function getItem(url) {
             color = colorHTML.innerText
         } else color = ''
 
-    let shape, profile_type, articul, construction, board_lenght, sidecut_radius, contact_length, nose_width, middle_width, tail_width, core_material,
+    let shape, profile_type, articul, board_lenght, sidecut_radius, contact_length, nose_width, middle_width, tail_width, core_material,
         rider_weight, riding_style, riding_level, rigidity, flex, gender, country, binding, sliding_surface_type, fasteners_distance, eco
     
     async function getAttributes() {
@@ -34,7 +42,7 @@ async function getItem(url) {
         const data = document.querySelector('#attributesFeatures')
        
         try {
-            shape = data.querySelector('.c-attributes-features__fp-item img').src.split('/')[5].split('.')[0]
+            shape = data.querySelector('.c-attributes-features__fp-item img').src.split('/')[5].split('.')[0].replace('snowboard-', '')
         } catch (error) {
             console.log('Не смог распарсить')
         }
@@ -45,15 +53,15 @@ async function getItem(url) {
             console.log('Не смог распарсить')
         }
 
-        let items
+        let attrs
         try {
-            items = data.querySelectorAll('.c-attributes-features__item')
-            items.forEach(element => {
-                let item = element.innerText.split(':')
-                let param = item[0]
-                let value = item[1].trim()
+            attrs = data.querySelectorAll('.c-attributes-features__item')
+            attrs.forEach(element => {
+                let attr = element.innerText.split(':')
+                let param = attr[0]
+                let value = attr[1].trim()
                 if (param == "Artikelnr.") { articul = value } else articul = ''
-                if (param == "Belag") { construction = value } else construction = ''
+                if (param == "Belag") { sliding_surface_type = value } else sliding_surface_type = ''
                 if (param == "Länge (cm)") { board_lenght = value } else board_lenght = ''
                 if (param == "Kurvenradius") { sidecut_radius = value } else sidecut_radius = ''
                 if (param == "Effektive Kantenlänge") { contact_length = value } else contact_length = ''
@@ -67,11 +75,10 @@ async function getItem(url) {
                 if (param == "Stiffness") { rigidity = value } else rigidity = ''
                 if (param == "Flex") { flex = value } else flex = ''
                 if (param == "Für") { gender = value } else gender = ''
-                if (param == "Produktionsland:") { country = value } else country = ''
-                if (param == "Einstiegsart:") { binding = value } else binding = ''
-                if (param == "Artikelnr") { sliding_surface_type = value } else sliding_surface_type = ''
-                if (param == "Stance:") { fasteners_distance = value } else fasteners_distance = ''
-                if (param == "Öko:") { eco = value } else eco = ''
+                if (param == "Produktionsland") { country = value } else country = ''
+                if (param == "Einstiegsart") { binding = value } else binding = ''
+                if (param == "Stance") { fasteners_distance = value } else fasteners_distance = ''
+                if (param == "Öko") { eco = value } else eco = ''
             });
         } catch (error) {
             console.log('Не смог распарсить')
@@ -83,12 +90,13 @@ async function getItem(url) {
     return {
         id,
         title,
+        season,
         brand,
         color,
         shape,
         profile_type,
         articul,
-        construction,
+        sliding_surface_type,
         board_lenght,
         sidecut_radius,
         contact_length,
@@ -104,7 +112,6 @@ async function getItem(url) {
         flex,
         gender,
         binding,
-        sliding_surface_type,
         fasteners_distance,
         eco
     }
@@ -158,9 +165,9 @@ async function getData(numPage = 1) {
                 price_currency = price[0]
             }
 
-            const { id, title, brand, color, shape, articul, profile_type, construction, board_lenght, sidecut_radius, middle_width, nose_width, tail_width, contact_length, core_material, rider_weight, riding_style, riding_level, country, rigidity, flex, gender, binding, sliding_surface_type, fasteners_distance, eco } = await getItem(link);
+            const { id, title, season, brand, color, shape, articul, profile_type, sliding_surface_type, board_lenght, sidecut_radius, middle_width, nose_width, tail_width, contact_length, core_material, rider_weight, riding_style, riding_level, country, rigidity, flex, gender, binding, fasteners_distance, eco } = await getItem(link);
 
-            result.push({ site: 'www.blue-tomato.com', image, link, is_new, is_sale, price_value, price_currency, id, title, brand, color, shape, articul, profile_type, construction, board_lenght, sidecut_radius, middle_width, nose_width, tail_width, contact_length, core_material, rider_weight, riding_style, riding_level, country, rigidity, flex, gender, binding, sliding_surface_type, fasteners_distance, eco })
+            result.push({ site: 'www.blue-tomato.com', image, link, is_new, is_sale, price_value, price_currency, id, title, season, brand, color, shape, articul, profile_type, sliding_surface_type, board_lenght, sidecut_radius, middle_width, nose_width, tail_width, contact_length, core_material, rider_weight, riding_style, riding_level, country, rigidity, flex, gender, binding, fasteners_distance, eco })
         }
 
     return result;
