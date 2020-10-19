@@ -11,14 +11,14 @@ async function getItem(url) {
     try {
         title = document.querySelector("#variantName").innerHTML
     } catch (error) {
-        console.log('Не смог распарсить')
+        console.log('Не смог распарсить ' + title)
     }
 
     let season
         try {
             season = document.querySelector("#variantName").innerHTML.replace('Snowboard', '').trim().split(' ').pop().trim()
         } catch (error) {
-            console.log('Не смог распарсить')
+            console.log('Не смог распарсить ' + season)
         }
 
 
@@ -26,40 +26,40 @@ async function getItem(url) {
     try {
         brand = document.querySelector(".c-details-box__name span").innerHTML
     } catch (error) {
-        console.log('Не смог распарсить')
+        console.log('Не смог распарсить '+ brand)
     }
     
-    let colorHTML = document.querySelector('.c-family-selector__color')
-    if(colorHTML) {
-            color = colorHTML.innerText
-        } else color = ''
+    let color
+    try {
+        color = document.querySelector('.c-family-selector').innerText.split(',').pop().trim()
+    } catch (error) {
+        console.log('Не смог распарсить ' + color)
+    }
 
     let shape, profile_type, articul, board_lenght, sidecut_radius, contact_length, nose_width, middle_width, tail_width, core_material,
         rider_weight, riding_style, riding_level, rigidity, flex, gender, country, binding, sliding_surface_type, fasteners_distance, eco
     
     async function getAttributes() {
 
-        const data = document.querySelector('#attributesFeatures')
-       
         try {
-            shape = data.querySelector('.c-attributes-features__fp-item img').src.split('/')[5].split('.')[0].replace('snowboard-', '')
+            shape = document.querySelector('.c-attributes-features__fp-item img').src.split('/')[5].split('.')[0].replace('snowboard-', '')
         } catch (error) {
-            console.log('Не смог распарсить')
+            console.log('Не смог распарсить ' + shape)
         }
        
         try {
-            profile_type = data.querySelector('.c-attributes-features__fp-attributes').children[1].querySelector('img').src.split('/')[5].split('.')[0].split('-').slice(1).join(' ')
+            profile_type = document.querySelector('.c-attributes-features__fp-attributes').children[1].querySelector('img').src.split('/')[5].split('.')[0].split('-').slice(1).join(' ')
         } catch (error) {
-            console.log('Не смог распарсить')
+            console.log('Не смог распарсить ' + profile_type)
         }
 
-        let attrs
+        let params
         try {
-            attrs = data.querySelectorAll('.c-attributes-features__item')
-            attrs.forEach(element => {
-                let attr = element.innerText.split(':')
-                let param = attr[0]
-                let value = attr[1].trim()
+            params = document.querySelectorAll('.c-attributes-features__item')
+            params.forEach(element => {
+                let e = element.innerText.split(':')
+                let param = e[0]
+                let value = e[1].trim()
                 if (param == "Artikelnr.") { articul = value } else articul = ''
                 if (param == "Belag") { sliding_surface_type = value } else sliding_surface_type = ''
                 if (param == "Länge (cm)") { board_lenght = value } else board_lenght = ''
@@ -81,8 +81,8 @@ async function getItem(url) {
                 if (param == "Öko") { eco = value } else eco = ''
             });
         } catch (error) {
-            console.log('Не смог распарсить')
-        }
+            console.log('Не смог распарсить ' + params)
+        }  
     }
 
     await getAttributes();
